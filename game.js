@@ -1,4 +1,4 @@
-var gameOfLife = {
+const gameOfLife = {
   
   width: 12, 
   height: 12, // width and height dimensions of the board
@@ -7,13 +7,13 @@ var gameOfLife = {
   createAndShowBoard: function () {
     
     // create <table> element
-    var goltable = document.createElement("tbody");
+    let goltable = document.createElement("tbody");
     
     // build Table HTML
-    var tablehtml = '';
-    for (var h=0; h<this.height; h++) {
+    let tablehtml = '';
+    for (let h = 0; h < this.height; h++) {
       tablehtml += "<tr id='row+" + h + "'>";
-      for (var w=0; w<this.width; w++) {
+      for (let w = 0; w<this.width; w++) {
         tablehtml += "<td data-status='dead' id='" + w + "-" + h + "'></td>";
       }
       tablehtml += "</tr>";
@@ -21,7 +21,7 @@ var gameOfLife = {
     goltable.innerHTML = tablehtml;
     
     // add table to the #board element
-    var board = document.getElementById('board');
+    let board = document.getElementById('board');
     board.appendChild(goltable);
     
     // once html elements are added to the page, attach events to them
@@ -29,12 +29,18 @@ var gameOfLife = {
   },
 
   forEachCell: function (iteratorFunc) {
-    /* 
+    /*
       Write forEachCell here. You will have to visit
       each cell on the board, call the "iteratorFunc" function,
       and pass into func, the cell and the cell's x & y
       coordinates. For example: iteratorFunc(cell, x, y)
     */
+   for (let h = 0; h < this.height; h++) {
+     for (let w = 0; w < this.width; w++) {
+       let currCell = document.getElementById(`${w}-${h}`);
+       iteratorFunc(currCell, w, h);
+     }
+   }
   },
   
   setupBoardEvents: function() {
