@@ -3,7 +3,7 @@ const gameOfLife = {
   width: 12, 
   height: 12, // width and height dimensions of the board
   stepInterval: null, // should be used to hold reference to an interval that is "playing" the game
-
+  state: {},
   createAndShowBoard: function () {
     
     // create <table> element
@@ -57,6 +57,10 @@ const gameOfLife = {
     // EXAMPLE FOR ONE CELL
     // Here is how we would catch a click event on just the 0-0 cell
     // You need to add the click event on EVERY cell on the board
+    this.forEachCell((cell) => {
+      gameOfLife.state[cell.id] = 0;
+    });
+
     var onCellClick = function (e) {
       
       // QUESTION TO ASK YOURSELF: What is "this" equal to here?
@@ -65,9 +69,11 @@ const gameOfLife = {
       if (this.dataset.status == 'dead') {
         this.className = 'alive';
         this.dataset.status = 'alive';
+        gameOfLife.state[this.id] = 1;
       } else {
         this.className = 'dead';
         this.dataset.status = 'dead';
+        gameOfLife.state[this.id] = 0;
       }
       
     };
@@ -102,6 +108,9 @@ const gameOfLife = {
     randomBtn.addEventListener('click', function() {
       gameOfLife.forEachCell(onRandomClick);
     });
+
+    let stepBtn = document.getElementById('step_btn');
+    stepBtn.addEventListener('click', this.step);
   },
 
   step: function () {
@@ -113,6 +122,50 @@ const gameOfLife = {
     // You need to:
     // 1. Count alive neighbors for all cells
     // 2. Set the next state of all cells based on their alive neighbors
+    let nextState = {};
+    let checkNeighborStatus = function(cell, w, h) {
+      let aliveNeighbors = 0;
+      let prevCol = w > 0 ? w - 1 : w;
+      let nextCol = w === gameOfLife.width - 1 ? w : w + 1;
+      let prevRow = h > 0 ? h - 1 : h;
+      let nextRow = h === gameOfLife.height - 1 ? h : h + 1;
+      for (let i = prevCol; i <= nextCol; i++) {
+        for (let j = prevRow; j <= nextRow; j++) {
+          let currCell = document.getElementById(`${i}-${j}`);
+          if (currCell.id !== cell.id) {
+            if (currCell.dataset.status == 'alive') {
+              aliveNeighbors++;
+            }
+          }
+        }
+      }
+      if (cell.dataset.status == 'alive') {
+        if(aliveNeighbors === 2 || aliveNeighbors === 3) {
+          nextState[`${w}-${h}`] = 1;
+        } else {
+          nextState[`${w}-${h}`] = 0;
+        }
+      } else {
+        if (aliveNeighbors === 3) {
+          nextState[`${w}-${h}`] = 1;
+        } else {
+          nextState[`${w}-${h}`] = 0;
+        }
+      }
+    }
+
+    gameOfLife.forEachCell(checkNeighborStatus);
+    gameOfLife.state = nextState;
+    gameOfLife.forEachCell(function(cell, w, h) {
+      if (gameOfLife.state[`${w}-${h}`]) {
+        cell.className = 'alive';
+        cell.dataset.status = 'alive';
+      } else {
+        cell.className = 'dead';
+        cell.dataset.status = 'dead';
+      }
+    });
+
   },
 
   enableAutoPlay: function () {
