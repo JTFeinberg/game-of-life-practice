@@ -111,6 +111,9 @@ const gameOfLife = {
 
     let stepBtn = document.getElementById('step_btn');
     stepBtn.addEventListener('click', this.step);
+
+    let playBtn = document.getElementById('play_btn');
+    playBtn.addEventListener('click', this.enableAutoPlay);
   },
 
   step: function () {
@@ -170,9 +173,17 @@ const gameOfLife = {
 
   enableAutoPlay: function () {
     // Start Auto-Play by running the 'step' function
-    // automatically repeatedly every fixed time interval  
+    // automatically repeatedly every fixed time interval
+    let playBtn = document.getElementById('play_btn');
+    if (this.stepInterval) {
+      clearInterval(this.stepInterval);
+      this.stepInterval = null;
+      playBtn.innerHTML = 'Play';
+    } else {
+      playBtn.innerHTML = 'Stop';
+      this.stepInterval = setInterval(() => gameOfLife.step(), 250);
+    }
   }
-  
 };
 
 gameOfLife.createAndShowBoard();
