@@ -78,6 +78,19 @@ const gameOfLife = {
     this.forEachCell(function(cell) {
       cell.addEventListener('click', onCellClick);
     });
+
+    let onClearClick = function (cell) {
+      if (cell.dataset.status == 'alive') {
+        cell.className = 'dead';
+        cell.dataset.status = 'dead';
+      }
+    };
+
+    //Add event listener to clear button to make all cells dead
+    let clearBtn = document.getElementById('clear_btn');
+    clearBtn.addEventListener('click', function() {
+      gameOfLife.forEachCell(onClearClick);
+    });
   },
 
   step: function () {
