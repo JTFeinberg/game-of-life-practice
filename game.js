@@ -57,7 +57,6 @@ const gameOfLife = {
     // EXAMPLE FOR ONE CELL
     // Here is how we would catch a click event on just the 0-0 cell
     // You need to add the click event on EVERY cell on the board
-    
     var onCellClick = function (e) {
       
       // QUESTION TO ASK YOURSELF: What is "this" equal to here?
@@ -72,9 +71,13 @@ const gameOfLife = {
       }
       
     };
-    
-    var cell00 = document.getElementById('0-0');
-    cell00.addEventListener('click', onCellClick);
+    //Another way to add event listener is to pass this variable into forEachCell
+    // let addClickEvent = function(cell) {
+    //   cell.addEventListener('click', onCellClick);
+    // };
+    this.forEachCell(function(cell) {
+      cell.addEventListener('click', onCellClick);
+    });
   },
 
   step: function () {
