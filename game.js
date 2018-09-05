@@ -91,6 +91,17 @@ const gameOfLife = {
     clearBtn.addEventListener('click', function() {
       gameOfLife.forEachCell(onClearClick);
     });
+
+    let onRandomClick = function (cell) {
+      let randomStatus = Math.random() > 0.5 ? 'alive' : 'dead';
+      cell.className = randomStatus;
+      cell.dataset.status = randomStatus;
+    };
+
+    let randomBtn = document.getElementById('reset_btn');
+    randomBtn.addEventListener('click', function() {
+      gameOfLife.forEachCell(onRandomClick);
+    });
   },
 
   step: function () {
